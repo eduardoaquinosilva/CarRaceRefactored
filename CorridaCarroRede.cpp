@@ -1,76 +1,74 @@
 #pragma once
 #include <iostream>
+#include <string>
 #include "CorridaCarroPacoteHeader.h"
 #include "CorridaCarroCorHeader.h"
-
+#include "CorridaCarroRedeHeader.h"
 using namespace std;
 
-//variável global para ser utilizada nas funções transmitir e receber
-unsigned int rede = 0;
+unsigned int redeEmBits = 0;
 
-// função para coletar os dados de empacotar e transmitir para variável global rede.
-void transmitir(unsigned short passo, unsigned short cor, unsigned short posicao, unsigned short velocidade, unsigned short pista) {
-	rede = empacotar(passo, cor, posicao, velocidade, pista);
+Rede::Rede() {}
+
+Rede::~Rede() {}
+
+void Rede::transmitirDadosParaRede(unsigned short passo, unsigned short cor, unsigned short posicao, unsigned short velocidade, unsigned short pista) {
+	redeEmBits = Pacote::empacotarParaRede(passo, cor, posicao, velocidade, pista);
+
 	cout << "Transmitindo dados..." << endl;
-	ajustarCor(preto,cor);
-	cout << rede;
+	ajustarCor(PRETO, cor);
+	cout << redeEmBits;
 	resetCor();
 }
 
-//Função para receber os dados da variável global e colocar as informações no terminal
-unsigned int receber() {
-	// variável para o resultado do óleo ser passado como true ou false
-	bool resultado;
+unsigned int Rede::printarInformacoesNoTerminal() {
 	cout << "\nRecebendo dados..." << endl;
 
-	//Frame
-	ajustarCor(cor(rede),preto);
-	cout << "Frame: ";
-	resetCor();
-	ajustarCor(preto, cor(rede));
-	cout << " " << passo(rede) << " ";
-	resetCor();
+	printDadosRede(string("Frame: "), &Pacote::passo);
 
-	//Posição
-	ajustarCor(cor(rede), preto);
-	cout << " Pos: "; 
-	resetCor();
-	ajustarCor(preto, cor(rede));
-	cout << " " << posicao(rede) << " ";
-	resetCor();
+	printDadosRede(string("Pos: "), &Pacote::posicao);
 
-	//Velocidade
-	ajustarCor(cor(rede), preto);
-	cout << " Vel: "; 
-	resetCor();
-	ajustarCor(preto, cor(rede));
-	cout << " " << velocidade(rede) << " ";
-	resetCor();
+	printDadosRede(string("Vel: "), &Pacote::velocidade);
 
-	//Estado da pista
-	ajustarCor(cor(rede), preto);
-	cout << " Oil: "; 
-	resetCor();
-	ajustarCor(preto, cor(rede));
-	if (pista(rede) == 1) {
-		cout << " " << "true" << " " << endl;
-	}
-	else {
-		cout << " " << "false" << " " << endl;
-	}
-	resetCor();
-	return rede;
+	printEstadoPista();
+
+	return redeEmBits;
 }
 
-// Função que utilizando das informações de receber para gerar a nova posição do carro.
-unsigned int processar(unsigned int dados) {
-	unsigned short posicaoAtual = posicao(dados);
-	unsigned short velo = velocidade(dados);
-	unsigned short oleo = pista(dados);
+unsigned int Rede::gerarNovaPosicao(unsigned int dados) {
+	unsigned short posicaoAtual = Pacote::posicao(dados);
+	unsigned short velo = Pacote::velocidade(dados);
+	unsigned short oleo = Pacote::pista(dados);
 	unsigned short novaPosicao = posicaoAtual + (velo - oleo);
+	
 	cout << "Processando dados..." << endl;
-	ajustarCor(cor(dados), preto);
+	ajustarCor(Pacote::cor(dados), PRETO);
 	cout << "Próxima posição: " << novaPosicao << "\n\n";
 	resetCor();
 	return novaPosicao;
+}
+
+void Rede::printEstadoPista(int corSecundaria = PRETO) {
+	ajustarCor(Pacote::cor(redeEmBits), corSecundaria);
+	cout << " Oil: ";
+	resetCor();
+	ajustarCor(corSecundaria, Pacote::cor(redeEmBits));
+	
+	if (Pacote::pista(redeEmBits) == 1) {
+		cout << " " << "true" << " " << endl;
+	} else {
+		cout << " " << "false" << " " << endl;
+	}
+	
+	resetCor();
+}
+
+void Rede::printDadosRede(string text, unsigned short (*function)(unsigned int), int corSecundaria = PRETO) {
+	ajustarCor(Pacote::cor(redeEmBits), corSecundaria);
+	cout << text;
+	resetCor();
+	
+	ajustarCor(corSecundaria, Pacote::cor(redeEmBits));
+	cout << " " << function(redeEmBits) << " ";
+	resetCor();
 }

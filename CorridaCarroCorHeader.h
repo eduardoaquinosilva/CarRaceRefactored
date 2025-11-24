@@ -1,12 +1,13 @@
-#pragma once
-#define azul 4
-#define verde 2
-#define amarelo 3
-#define preto 0
-#define padrao "\033[m"
+#ifndef COLOR_H
+#define COLOR_H
 
-//Prótipo das funções
+#define AZUL 4
+#define VERDE 2
+#define AMARELO 3
+#define PRETO 0
+#define PADRAO "\033[m"
 
-//Para biblioteca de COR
 void ajustarCor(int, int);
 void resetCor();
+
+#endif

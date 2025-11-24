@@ -6,9 +6,9 @@ using namespace std;
 //Para Desenhar
 void desenhar(unsigned short, unsigned short);
 void espacos(int);
+void printCarInfo(int, int, int, int);
 
 int main() {
-
 	// --------------------
 	// Inicializando dados:
 	cout.setf(ios_base::fixed,ios_base::floatfield);
@@ -21,8 +21,8 @@ int main() {
 	unsigned short velo1 = 0;
 	unsigned short velo2 = 0;
 	
-	unsigned short cor1 = verde;
-	unsigned short cor2 = azul;
+	unsigned short cor1 = VERDE;
+	unsigned short cor2 = AZUL;
 	
 	unsigned short estPis1 = 0;
 	unsigned short estPis2 = 0;
@@ -36,8 +36,8 @@ int main() {
 	// ------------------------
 	// Limpando sistema anterior e desenhando carros nas posições atuais
 	system("cls");
-	desenhar(pos1, verde);
-	desenhar(pos2, azul);
+	desenhar(pos1, VERDE);
+	desenhar(pos2, AZUL);
 	// ------------------------
 	
 	// ------------------------
@@ -52,11 +52,11 @@ int main() {
 			
 	// ----------------------------------
 	// Dados na tela e Calcula Próxima posição
-	transmitir(passo,cor1,pos1,velo1,estPis1);
-	pos1 = processar(receber());
+	Rede::Rede::transmitirDadosParaRede(passo,cor1,pos1,velo1,estPis1);
+	pos1 = Rede::gerarNovaPosicao(Rede::printarInformacoesNoTerminal());
 
-	transmitir(passo,cor2,pos2,velo2,estPis2);
-	pos2 = processar(receber());
+	Rede::transmitirDadosParaRede(passo,cor2,pos2,velo2,estPis2);
+	pos2 = Rede::gerarNovaPosicao(Rede::printarInformacoesNoTerminal());
 	// ----------------------------------
 
 
@@ -75,49 +75,26 @@ int main() {
 	// Tela FINAL
 	system("cls");
 	//Passos
-	desenhar(pos1, verde);
-	desenhar(pos2, azul);
-	ajustarCor(preto, amarelo);
+	desenhar(pos1, VERDE);
+	desenhar(pos2, AZUL);
+	ajustarCor(PRETO, AMARELO);
 	cout << " Passos  ";
 	resetCor();
-	ajustarCor(amarelo, preto);
+	ajustarCor(AMARELO, PRETO);
 	cout << " "; cout.width(3); cout << passo << " " << endl;
-	ajustarCor(preto, verde);
+	ajustarCor(PRETO, VERDE);
 
 	//Posição e velocidade média do 1° carro
-	cout << " Posição ";
-	resetCor();
-	ajustarCor(verde, preto);
-	cout << " "; cout.width(3); cout << pos1 << " ";
-	resetCor();
-	ajustarCor(preto, verde);
-	cout << " Velocidade média ";
-	resetCor();
-	ajustarCor(verde, preto);
-	cout << " " << velocidadeMedia1 << " " << endl;
-	resetCor();
+	printCarInfo(VERDE, pos1, velocidadeMedia1);
 
 	//Posição e velocidade média do 2° carro
-	ajustarCor(preto, azul);
-	cout << " Posição ";
-	resetCor();
-	ajustarCor(azul, preto);
-	cout << " "; cout.width(3); cout << pos2 << " ";
-	resetCor();
-	ajustarCor(preto, azul);
-	cout << " Velocidade média ";
-	resetCor();
-	ajustarCor(azul, preto);
-	cout << " " << velocidadeMedia2 << " " << endl;
-	resetCor();
+	printCarInfo(AZUL, pos2, velocidadeMedia2);
 	// --------------------
-
-
 }
 
 //Função para desenhar os carros e a pista.
 void desenhar(unsigned short posicao, unsigned short cor) {
-	ajustarCor(cor, preto);
+	ajustarCor(cor, PRETO);
 	cout << "\n\n\n";
 	espacos(posicao); cout << "\xDB\xDC\xDB\xDB\xDB\xDB\xDB\xDC\n";
 	espacos(posicao); cout << "\xDFO\xDF\xDF\xDF\xDFO\xDF\xDF\n";
@@ -128,4 +105,18 @@ void desenhar(unsigned short posicao, unsigned short cor) {
 //Função para fazer os carros andarem.
 void espacos(int qtd) { 
 	while (qtd-- > 0) cout << ' '; 
+}
+
+void printCarInfo(int corPrincipal, int pos, int velocidadeMedia, int corSecundaria = PRETO) {
+	cout << " Posição ";
+	resetCor();
+	ajustarCor(corPrincipal, corSecundaria);
+	cout << " "; cout.width(3); cout << pos << " ";
+	resetCor();
+	ajustarCor(corSecundaria, corPrincipal);
+	cout << " Velocidade média ";
+	resetCor();
+	ajustarCor(corPrincipal, corSecundaria);
+	cout << " " << velocidadeMedia << " " << endl;
+	resetCor();
 }

@@ -11,5 +11,5 @@ void ajustarCor(int corTexto,int corFundo) {
 
 //Função para retornar cor padrão do terminal
 void resetCor() {
-	cout << padrao;
+	cout << PADRAO;
 }
