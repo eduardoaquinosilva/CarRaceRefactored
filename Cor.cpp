@@ -1,6 +1,5 @@
-#pragma once
 #include <iostream>
-#include "CorridaCarroCorHeader.h"
+#include "Cor.h"
 
 using namespace std;
 

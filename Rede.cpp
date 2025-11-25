@@ -1,22 +1,18 @@
-#pragma once
 #include <iostream>
 #include <string>
-#include "CorridaCarroPacoteHeader.h"
-#include "CorridaCarroCorHeader.h"
-#include "CorridaCarroRedeHeader.h"
+#include "Pacote.h"
+#include "Cor.h"
+#include "Rede.h"
+#include "Carro.h"
 using namespace std;
 
-unsigned int redeEmBits = 0;
+unsigned int Rede::redeEmBits = 0;
 
-Rede::Rede() {}
-
-Rede::~Rede() {}
-
-void Rede::transmitirDadosParaRede(unsigned short passo, unsigned short cor, unsigned short posicao, unsigned short velocidade, unsigned short pista) {
-	redeEmBits = Pacote::empacotarParaRede(passo, cor, posicao, velocidade, pista);
+void Rede::transmitirDadosParaRede(unsigned short passo, Carro* carro, int corSecundaria) {
+	redeEmBits = Pacote::empacotarParaRede(passo, carro->Cor(), carro->Posicao(), carro->Velocidade(), carro->Derrapa());
 
 	cout << "Transmitindo dados..." << endl;
-	ajustarCor(PRETO, cor);
+	ajustarCor(corSecundaria, carro->Cor());
 	cout << redeEmBits;
 	resetCor();
 }
@@ -48,7 +44,7 @@ unsigned int Rede::gerarNovaPosicao(unsigned int dados) {
 	return novaPosicao;
 }
 
-void Rede::printEstadoPista(int corSecundaria = PRETO) {
+void Rede::printEstadoPista(int corSecundaria) {
 	ajustarCor(Pacote::cor(redeEmBits), corSecundaria);
 	cout << " Oil: ";
 	resetCor();
@@ -63,7 +59,7 @@ void Rede::printEstadoPista(int corSecundaria = PRETO) {
 	resetCor();
 }
 
-void Rede::printDadosRede(string text, unsigned short (*function)(unsigned int), int corSecundaria = PRETO) {
+void Rede::printDadosRede(string text, unsigned short (*function)(unsigned int), int corSecundaria) {
 	ajustarCor(Pacote::cor(redeEmBits), corSecundaria);
 	cout << text;
 	resetCor();

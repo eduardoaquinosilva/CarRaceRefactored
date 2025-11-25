@@ -4,7 +4,6 @@
 class Pacote
 {
 public:
-	Pacote();
 	static unsigned int empacotarParaRede(unsigned short, unsigned short, unsigned short, unsigned short, unsigned short);	
 	static unsigned short passo(unsigned int);
 	static unsigned short cor(unsigned int);

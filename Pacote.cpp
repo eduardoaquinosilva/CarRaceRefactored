@@ -1,9 +1,5 @@
-#pragma once
 #include <iostream>
-
-#include "CorridaCarroPacoteHeader.h"
-
-Pacote::Pacote() {}
+#include "Pacote.h"
 
 unsigned int Pacote::empacotarParaRede(unsigned short passo, unsigned short cor, unsigned short posicao, unsigned short velocidade, unsigned short pista) {
 	unsigned int pacote = 0;
